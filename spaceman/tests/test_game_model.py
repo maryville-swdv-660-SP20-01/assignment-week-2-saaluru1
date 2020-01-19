@@ -52,7 +52,7 @@ class GameModelTests( TestCase ):
         )
 
         game.handleGuess('X')
-        self.assertEquals( expectedGuessesTaken, game.guesses_taken )
+        self.assertEquals( expectedGuessesTaken + 1, game.guesses_taken )
     
 
     ### guessed_word_state field

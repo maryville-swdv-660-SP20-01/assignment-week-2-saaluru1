@@ -159,7 +159,8 @@ class GameModelTests( TestCase ):
     # HINT: considering adding a fixture or other widely scoped variables if you feel ]hat will
     #  make this easier
 
-    
+    # Item 2. If a guess is made and the letter is in the word, then the game should not be over
+    #          Assumption: still the whole word is not guessed.
     def test_is_game_over_is_false_if_guesses_left( self ):
         game = Game( 
             word= 'TESTWORD',
@@ -171,6 +172,7 @@ class GameModelTests( TestCase ):
         game.handleGuess('T')
         self.assertEquals( game.is_game_over , False )
 
+    # Item 2. If a guess is made and the letter is not in the word, then the game should not be over
     def test_is_game_over_is_false_if_not_all_letters_guessed( self ):
         game = Game( 
             word= 'TESTWORD',
@@ -182,14 +184,25 @@ class GameModelTests( TestCase ):
         game.handleGuess('Z')
         self.assertEquals( game.is_game_over , False )
 
+    # Item 2. 1.If a guess is made and it is the last allowed guess (e.g., guess 10 of 10), then after handling the guess the game should be over
+    #       Assumption: Even the whole word is not yet guessed, as the allowed guesses are over, Game should be over
     def test_is_game_over_is_true_if_no_guesses_left( self ):
-        pass
+        game = Game( 
+            word= 'TESTWORD',
+            guessed_word_state= ['','','S','','W','O','R','D'],
+            letters_guessed = ['B', 'R','S','W','O','R','D'],
+            guesses_allowed= 10, 
+            guesses_taken= 10
+        )
+        game.handleGuess('T')
+        self.assertEquals( game.is_game_over , True )
 
+    # Item 2. 2.If a guess is made and it is the last guess (e.g., the last missing letter), then after handling the guess the game should be over
     def test_is_game_over_is_true_if_all_letters_guessed( self ):
         game = Game( 
             word= 'TESTWORD',
             guessed_word_state= ['','E','S','','W','O','R','D'],
-            letters_guessed = ['B', 'R','C''E','S','W','O','R','D'],
+            letters_guessed = ['B', 'R','C','E','S','W','O','R','D'],
             guesses_allowed= 10, 
             guesses_taken= 8
         )

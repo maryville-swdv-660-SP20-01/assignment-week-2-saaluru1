@@ -40,7 +40,7 @@ class GameApiViewTests( TestCase ):
         self.assertEquals( response.status_code, 200)
         self.assertIsNotNone( response.data['id'] )
         self.assertTrue( response.data['id'] >= 0 )
-
+        
     ### PUT (guess letter) view 
     def test_game_view_should_create_update_guesses_on_PUT( self ):
         with patch.object( Game.objects, 'get' ) as mock_get:

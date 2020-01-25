@@ -40,7 +40,7 @@ class GameApiViewTests( TestCase ):
         self.assertEquals( response.status_code, 200)
         self.assertIsNotNone( response.data['id'] )
         self.assertTrue( response.data['id'] >= 0 )
-
+        
     ### PUT (guess letter) view 
     def test_game_view_should_create_update_guesses_on_PUT( self ):
         with patch.object( Game.objects, 'get' ) as mock_get:
@@ -72,4 +72,26 @@ class GameApiViewTests( TestCase ):
     # TODO: Add tests for Getting a game's solution
     # HINT: remember the `setUp` fixture that is in this test class, 
     #   it constructs things that might be useful
+    """ We are missing tests for the solution response for the Game view/controller. The expectations are that the get_solution function should:
+    1. respond with a 404 status code when the id for a game is not found
+    2. respond with a game's solution word in a json structure like this:
+    {
+        "solution": "batman"
+    }
+    HINT: you're going to need to mock whatever does the game object look up """
+    
+    def test_game_view_game_solution_for_game_is_not_found( self ):
+        with patch.object( Game.objects, 'get' ) as mock_get:
+            mock_get.return_value = self.mock_game
+            mock_get.side_effect = Game.DoesNotExist
+            response = game_solution(self.mock_get_request,25)
+            self.assertEquals( response.status_code, 404)
 
+    def test_game_view_game_solution_for_word( self ):
+        with patch.object( Game.objects, 'get' ) as mock_get:
+            # Changing the word
+            self.mock_game.word = 'batman'
+            mock_get.return_value = self.mock_game
+            response = game_solution(self.mock_get_request,25)
+            self.assertEquals( response.status_code, 200)
+            self.assertEquals(response.data , {'solution': 'batman'})
